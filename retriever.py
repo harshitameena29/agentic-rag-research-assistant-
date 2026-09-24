@@ -1,7 +1,7 @@
 import os
 
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -29,8 +29,10 @@ def build_retriever(pdf_path: str, k: int = 4):
     if not chunks:
         raise ValueError("Could not create text chunks from the PDF.")
 
-    # Create embeddings
-    embeddings = HuggingFaceEmbeddings(
+    # Create embeddings (calls HuggingFace's hosted API instead of loading
+    # the model locally, so it doesn't blow past Render's free-tier RAM limit)
+    embeddings = HuggingFaceInferenceAPIEmbeddings(
+        api_key=os.environ["HF_API_TOKEN"],
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
