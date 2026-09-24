@@ -15,3 +15,4 @@ uvicorn==0.32.0
 python-multipart
 requests==2.32.3
 pydantic==2.9.2
+huggingface_hub>=0.23.0
